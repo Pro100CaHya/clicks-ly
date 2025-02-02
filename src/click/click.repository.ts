@@ -23,6 +23,16 @@ export class ClickRepository {
   }
 
   async getLeaderboard(limit: number) {
+    // Optimize the materialized view before querying it
+    // Can be not a good idea when we have a lot of data
+    // But i want to always return sync data
+    // One of the good solutions maybe is to have cron task to optimize periodically
+
+    await this.clickhouseService.query({
+      query: "OPTIMIZE TABLE leaderboard_mv FINAL;",
+      format: "JSONEachRow",
+    });
+
     const res = await this.clickhouseService.query({
       query: `
         SELECT * FROM default.leaderboard_mv ORDER BY totalPoints DESC LIMIT ${limit};
