@@ -37,3 +37,9 @@ docker compose up -d
 ```shell
 bun run dev
 ```
+
+When you'll see comment **🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}**, you can use REST API
+
+You can also see Swagger on link: http://localhost:3000/swagger
+
+Clickhouse client (Tabix): http://localhost:8080

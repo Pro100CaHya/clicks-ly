@@ -12,7 +12,7 @@ services:
       CLICKHOUSE_USER: clicksly
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
       CLICKHOUSE_PASSWORD: clicksly
-      CLICKHOUSE_DB: clicksly
+      CLICKHOUSE_DB: default
     volumes:
       - clickhouse_data:/var/lib/clickhouse
       - clickhouse_logs:/var/log/clickhouse-server
