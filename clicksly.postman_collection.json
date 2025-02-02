@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "2d290d3b-7050-4064-950a-739ad9d72fbd",
+		"name": "clicksly",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18361427"
+	},
+	"item": [
+		{
+			"name": "localhost",
+			"item": [
+				{
+					"name": "/click",
+					"item": [
+						{
+							"name": "click-01",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": \"0ced4b7b-7a20-47d9-b0ed-a6f393741d00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/click",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"click"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "/leaderboard",
+					"item": [
+						{
+							"name": "leaderboard-01",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/leaderboard?limit=8",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"leaderboard"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
