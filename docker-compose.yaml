@@ -1,0 +1,99 @@
+name: clicks-ly
+
+services:
+  clickhouse:
+    container_name: clickhouse
+    image: clickhouse:24.12
+    restart: always
+    ports:
+      - "18123:8123"
+      - "19000:9000"
+    environment:
+      CLICKHOUSE_USER: clicksly
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      CLICKHOUSE_PASSWORD: clicksly
+      CLICKHOUSE_DB: clicksly
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/log/clickhouse-server
+      - ./db/clickhouse-init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  tabix:
+    image: spoonest/clickhouse-tabix-web-client
+    container_name: tabix
+    restart: always
+    ports:
+      - "8080:80"  # Веб-интерфейс Tabix
+    depends_on:
+      - clickhouse
+    environment:
+      CH_NAME: clicksly-dev-local
+      CH_HOST: http://localhost:18123
+      CH_LOGIN: clicksly
+      CH_PASSWORD: clicksly
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.8.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"  # Внешний порт для подключения с localhost
+      - "29092:29092" # Внутренний порт для Docker-контейнеров
+    hostname: kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,DOCKER://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - 8090:8080
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    links:
+      - kafka
+      - zookeeper
+
+  couchdb:
+    image: couchdb:3.4.2
+    container_name: couchdb
+    restart: always
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: admin
+
+  couchdb-initializer:
+    image: curlimages/curl
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - couchdb
+    command: ["sh","-c","sleep 5 && curl -u admin:admin -X PUT couchdb:5984/clicksly"]
+
+volumes:
+  clickhouse_data:
+  clickhouse_logs:

@@ -1,15 +1,39 @@
-# Elysia with Bun runtime
+# Click-ly
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
+A RESTful API that provides info about users' clicks and their's points
+
+## How to launch the project
+
+### Prerequisites
+
+You need to have installed
+
+- [Bun](https://bun.sh) for launch the app
+- [Docker](https://www.docker.com) for launch infrastructure components
+- *Optional* [DBeaver](https://dbeaver.io) for convenient interaction with databases (the project uses ClickHouse and CouchDB)
+
+### Launch instruction
+
+1. Clone this repo
+
+```shell
+git clone https://github.com/Pro100CaHya/clicks-ly.git
 ```
 
-## Development
-To start the development server run:
-```bash
+2. Install the dependencies
+
+```shell
+bun install
+```
+
+3. Run docker-compose file
+
+```
+docker compose up -d
+```
+
+4. Run the project
+
+```shell
 bun run dev
 ```
-
-Open http://localhost:3000/ with your browser to see the result.

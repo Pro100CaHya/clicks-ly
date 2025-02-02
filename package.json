@@ -2,14 +2,26 @@
   "name": "clicks-ly",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --env-file=.env.dev-local --watch src/index.ts clicksly",
+    "test:unit": "bun test tests/unit",
+    "eslint:fix": "npx eslint . --fix"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@clickhouse/client": "^1.10.1",
+    "@elysiajs/swagger": "^1.2.0",
+    "elysia": "latest",
+    "envalid": "^8.0.0",
+    "kafkajs": "^2.2.4",
+    "nano": "^10.1.4",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
-    "bun-types": "latest"
-  },
-  "module": "src/index.js"
+    "@eslint/js": "^9.19.0",
+    "bun-types": "latest",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.22.0"
+  }
 }
